@@ -2,7 +2,7 @@
 
 <html lang="en">
     <head>
-        <title>Escrow</title>
+        <title>Creator Tokens</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -33,7 +33,7 @@
                         <script>
                             $( () => {
                                 $('.menu a').bind('click', function() {
-                                    $('.menu a').removeClass('clicked');s
+                                    $('.menu a').removeClass('clicked');
                                     $(this).addClass('clicked');
                                 })
                             })
@@ -41,10 +41,24 @@
                     </div>
                 </div>
                 <div class="col-md-2">
-                    <button type="button" class="btn button" onclick="getAccount()">Connect wallet</button>
+                    <button type="button" class="btn button" id="getAccount">Connect wallet</button>
                     <span class="button" id="wallet-address"></span>
                     <script>
-                        $('#wallet-address').hide();
+                        let walletAddress = document.getElementById('wallet-address');
+                        walletAddress.style.visibility = 'hidden';
+                        $('#getAccount').click(async () => {
+                            let address;
+                            const connectStatus = await getAccount()
+                            if (connectStatus !== "") {
+                                const address1 = connectStatus.slice(0, 10);
+                                const address2 = connectStatus.slice(-5);
+                                address = address1 + "..." + address2;
+
+                                $('#getAccount').hide();
+                                $('#wallet-address').text(address);
+                                walletAddress.style.visibility = 'visible';
+                            }
+                        });
                     </script>
                 </div>
             </div>
@@ -62,14 +76,16 @@
                         </div>
                         <div class="inputs">
                             <div style="padding">
-                                <span>Valuation</span>
+                                <span>Valuation ($)</span>
                                 <input id="tokenValuation" class="texts" autocomplete="off" autocorrect="off" type="text" pattern="^[0-9]*[.,]?[0-9]*$" placeholder="1000000" minlength="1" maxlength="79" spellcheck="false">
                             </div>
                         
                         </div>
                         <div class="inputs">
-                            <span>Maximum Supply</span>
-                            <input id="tokenSupply" class="texts" type="text" autocomplete="off" autocorrect="off" placeholder="Unlimited" minlength="16" maxlength="42" spellcheck="false">
+                            <div style="padding">
+                                <span>Maximum Supply</span>
+                                <input id="tokenSupply" class="texts" type="text" autocomplete="off" autocorrect="off" placeholder="Unlimited" minlength="16" maxlength="42" spellcheck="false">
+                            </div>
                         </div>
                         <div class="">
                             <button type="submit" class="submit" style="background-color: #2172e4;" id="create">Create</button>
@@ -116,13 +132,11 @@
                                             $('#supply').hide();
                                         }
                                     });
-
                                     
-                                    })  
+                                })  
                             </script>
                         </div>
                         
-                        </div>
                     </div>
                 </div>
                 <div class="col-md-2"></div>
@@ -141,7 +155,7 @@
                             </div>
                             <div class="inputs">
                                 <div style="padding">
-                                    <span>ETH</span>
+                                    <span>MATIC</span>
                                     <input id="supportAmount" class="fans" autocomplete="off" autocorrect="off" type="text" pattern="^[0-9]*[.,]?[0-9]*$" placeholder="0.0" minlength="1" maxlength="79" spellcheck="false">
                                 </div>
                             
@@ -179,14 +193,19 @@
                                                 $('#c-amount').hide();
                                             }
                                         });
-    
+
+                                        $('#support').click(async () => {
+                                            let symbol = $('#stokenSymbol').val();
+                                            let amount = $('#supportAmount').val();
+                                            let status = await supportToken(symbol, amount);
+                                            console.log(status)
+                                        });
                                         
-                                        })  
+                                        }); 
                                 </script>
                             </div>
                     </div>
-                </div>
-                        
+                </div>       
                 <div class="col-md-2"></div>
             </div>
             <div class="row header" id="withdrawContributions">
@@ -203,7 +222,7 @@
                         </div>
                         <div class="inputs">
                             <div style="padding">
-                                <span>ETH</span>
+                                <span>MATIC</span>
                                 <input id="withdrawAmount" class="creator" autocomplete="off" autocorrect="off" type="text" pattern="^[0-9]*[.,]?[0-9]*$" placeholder="0.0" minlength="1" maxlength="79" spellcheck="false">
                             </div>
                         
@@ -240,16 +259,26 @@
                                         }
                                     });
 
+                                    $('#withdraw').click(async () => {
+                                        let symbol = $('#withdrawSymbol').val();
+                                        let amount = $('#withdrawAmount').val();
+                                        let status = await withdrawToken(symbol, amount);
+                                        console.log(status)
+                                    });
                                     
                                     })  
                             </script>
-                        </div>
-                        
                         </div>
                     </div>
                 </div>
                 <div class="col-md-2"></div>
             </div>
+            
+            <div class="modal-content" style="text-align:center;">
+                <span class="close">&times;</span>
+                <p><a href="#" id="transactionStatus">View transaction status</a></p>
+            </div>
+                
             <script>
                 $('#supportCreator').hide();
                 $('#withdrawContributions').hide();
@@ -269,7 +298,42 @@
                     $('#supportCreator').hide();
                     $('#withdrawContributions').show();
                 })
+
+                $('.modal-content').hide();
+                
+                $('#create').click(async () => {
+                    let symbol = $('#tokenSymbol').val();
+                    let valuation = $('#tokenValuation').val();
+                    let supply = $('#tokenSupply').val();
+                    let hash = await create(symbol, valuation, supply);
+                    let status = "https://polygonscan.com/tx/" + hash;
+                    $('#transactionStatus').attr("href", status);
+                    $('.modal-content').show();
+                });
+
+                $('#support').click(async () => {
+                    let amount = $('#supportAmount').val();
+                    let token = $('#stokenSymbol').val();
+                    let hash = await contribute(amount, token);
+                    let status = "https://polygonscan.com/tx/" + hash;
+                    $('#transactionStatus').attr("href", status);
+                    $('.modal-content').show();
+                });
+
+                $('#withdraw').click(async () => {
+                    let amount = $('#withdrawAmount').val();
+                    let token = $('#withdrawSymbol').val();
+                    let hash = await withdraw(amount, token);
+                    let status = "https://polygonscan.com/tx/" + hash;
+                    $('#transactionStatus').attr("href", status);
+                    $('.modal-content').show();
+                });
+                
             </script>
+
+            <div style="text-align:center; margin:auto">
+                <p>Ensure that you are connected to the Polygon Mainnet</p>
+            </div>
         </div>
     </body>
 </html>
