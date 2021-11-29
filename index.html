@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <title>Escrow</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <script src="./bundle.js"></script>
+        <link rel="stylesheet" href="stylesheets/style.css">
+    </head>
+    <body>
+        <div class ="container-fluid">
+            <div class="row header">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <div class="row menu">
+                        <div class="col-md-4">
+                            <a class="header-button" id="raise-button" href="#raise">Raise</a>
+                        </div>
+                        <div class="col-md-4">
+                            <a class="header-button" id="support-button" href="#support">Support</a>
+                        </div>
+                        <div class="col-md-4">
+                            <a class="header-button" id="withdraw-button" href="#withdraw">Withdraw</a>
+                        </div>
+                        <script>
+                            $( () => {
+                                $('.menu a').bind('click', function() {
+                                    $('.menu a').removeClass('clicked');s
+                                    $(this).addClass('clicked');
+                                })
+                            })
+                        </script>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn button" onclick="getAccount()">Connect wallet</button>
+                    <span class="button" id="wallet-address"></span>
+                    <script>
+                        $('#wallet-address').hide();
+                    </script>
+                </div>
+            </div>
+            <div class="row header" id="createToken">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <div class="" id="create-token">
+                        <p>Create Social Token</hp>
+                        <div class="inputs">
+                            <div style="padding">
+                                <span>Symbol</span>
+                                <input id="tokenSymbol" class="texts" type="text" autocomplete="off" autocorrect="off" type="text" pattern="^[0-9]*[.,]?[0-9]*$" placeholder="ABC" minlength="1" maxlength="79" spellcheck="false">
+                            </div>
+                        
+                        </div>
+                        <div class="inputs">
+                            <div style="padding">
+                                <span>Valuation</span>
+                                <input id="tokenValuation" class="texts" autocomplete="off" autocorrect="off" type="text" pattern="^[0-9]*[.,]?[0-9]*$" placeholder="1000000" minlength="1" maxlength="79" spellcheck="false">
+                            </div>
+                        
+                        </div>
+                        <div class="inputs">
+                            <span>Maximum Supply</span>
+                            <input id="tokenSupply" class="texts" type="text" autocomplete="off" autocorrect="off" placeholder="Unlimited" minlength="16" maxlength="42" spellcheck="false">
+                        </div>
+                        <div class="">
+                            <button type="submit" class="submit" style="background-color: #2172e4;" id="create">Create</button>
+                            <button type="submit" class="submit" style="background-color: #2d2f36;" id="symbol">Enter token symbol</button>
+                            <button type="submit" class="submit" style="background-color: #2d2f36;" id="valuation">Enter current valuation</button>
+                            <button type="submit" class="submit" style="background-color: #2d2f36;" id="supply">Enter maximum supply</button>
+                            <script>
+
+                                $(document).ready(function() {
+                                    $('#valuation').hide();
+                                    $('#create').hide()
+                                    $('#supply').hide()
+
+                                    $('#tokenSymbol').click(async ()=> {
+                                        $("#create").hide();
+                                        $('#symbol').show();
+                                        $('#valuation').hide();
+                                        $('#supply').hide();
+                                    });
+                                    
+                                    $('#tokenValuation').click(async ()=> {
+                                        $("#create").hide();
+                                        $('#symbol').hide();
+                                        $('#valuation').show();
+                                        $('#supply').hide();
+                                        
+                                    });
+
+                                    $('#tokenSupply').click(async ()=> {
+                                        $("#create").hide();
+                                        $('#symbol').hide();
+                                        $('#valuation').hide();
+                                        $('#supply').show();
+                                        
+                                    });
+                                    
+                                    $(".texts").change(function() {
+                                        if(($('#tokenSymbol').val().replace(/\s/g, "") === "") || ($('#tokenValuation').val().replace(/\s/g, "") === "") || ($('#tokenSupply').val().replace(/\s/g, "") === "")) {
+                                            $("#create").hide();
+                                        } else {
+                                            $("#create").show();
+                                            $('#address').hide();
+                                            $('#amount').hide();
+                                            $('#supply').hide();
+                                        }
+                                    });
+
+                                    
+                                    })  
+                            </script>
+                        </div>
+                        
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+            <div class="row header" id="supportCreator">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <div class="" id="support-creator">
+                        <p>Support Creator</hp>
+                            <div class="inputs">
+                                <div style="padding">
+                                    <span>Symbol</span>
+                                    <input id="stokenSymbol" class="fans" type="text" autocomplete="off" autocorrect="off" type="text" pattern="^[0-9]*[.,]?[0-9]*$" placeholder="ABC" minlength="1" maxlength="79" spellcheck="false">
+                                </div>
+                                
+                            </div>
+                            <div class="inputs">
+                                <div style="padding">
+                                    <span>ETH</span>
+                                    <input id="supportAmount" class="fans" autocomplete="off" autocorrect="off" type="text" pattern="^[0-9]*[.,]?[0-9]*$" placeholder="0.0" minlength="1" maxlength="79" spellcheck="false">
+                                </div>
+                            
+                            </div>
+                            <div class="">
+                                <button type="submit" class="submit" style="background-color: #2172e4;" id="support">Support</button>
+                                <button type="submit" class="submit" style="background-color: #2d2f36;" id="c-symbol">Enter token symbol</button>
+                                <button type="submit" class="submit" style="background-color: #2d2f36;" id="c-amount">Enter amount</button>
+                                <script>
+    
+                                    $(document).ready(function() {
+                                        $('#c-amount').hide();
+                                        $('#support').hide();
+    
+                                        $('#tokenSymbol').click(async ()=> {
+                                            $('#c-symbol').show();
+                                            $('#c-amount').hide();
+                                            $('#support').hide();
+                                        });
+                                        
+                                        $('#supportAmount').click(async ()=> {
+                                            $('#c-symbol').hide();
+                                            $('#c-amount').show();
+                                            $('#support').hide();
+                                            
+                                        });
+                                        
+                                        $(".fans").change(function() {
+                                            if(($('#stokenSymbol').val().replace(/\s/g, "") === "") || ($('#supportAmount').val().replace(/\s/g, "") === "")) {
+                                                $("#support").hide();
+                                                console.log("empty")
+                                            } else {
+                                                $("#support").show();
+                                                $('#c-symbol').hide();
+                                                $('#c-amount').hide();
+                                            }
+                                        });
+    
+                                        
+                                        })  
+                                </script>
+                            </div>
+                    </div>
+                </div>
+                        
+                <div class="col-md-2"></div>
+            </div>
+            <div class="row header" id="withdrawContributions">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <div class="" id="withdraw-contributions">
+                        <p>Withdraw Contributions</hp>
+                        <div class="inputs">
+                            <div style="padding">
+                                <span>Symbol</span>
+                                <input id="withdrawSymbol" class="creator" inputmode="text" autocomplete="off" autocorrect="off" type="text" placeholder="123" minlength="1" spellcheck="false">
+                            </div>
+                        
+                        </div>
+                        <div class="inputs">
+                            <div style="padding">
+                                <span>ETH</span>
+                                <input id="withdrawAmount" class="creator" autocomplete="off" autocorrect="off" type="text" pattern="^[0-9]*[.,]?[0-9]*$" placeholder="0.0" minlength="1" maxlength="79" spellcheck="false">
+                            </div>
+                        
+                        </div>
+                        <div class="">
+                            <button type="submit" class="submit" style="background-color: #2172e4;" id="withdraw">Withdraw</button>
+                            <button type="submit" class="submit" style="background-color: #2d2f36;" id="token-symbol">Enter token symbol</button>
+                            <button type="submit" class="submit" style="background-color: #2d2f36;" id="withdraw-amount">Enter amount</button>
+                            <script>
+
+                                $(document).ready(function() {
+                                    $('#withdraw').hide();
+                                    $('#withdraw-amount').hide();
+
+                                    $('#withdrawSymbol').click(async ()=> {
+                                        $('#withdraw').hide();
+                                        $('#withdraw-amount').hide();
+                                        $('#token-symbol').show();
+                                    });
+
+                                    $('#withdrawAmount').click(async ()=> {
+                                        $('#withdraw').hide();
+                                        $('#withdraw-amount').show();
+                                        $('#token-symbol').hide();
+                                    });
+                                    
+                                    $(".creator").change(function() {
+                                        if(($('#withdrawSymbol').val().replace(/\s/g, "") === "") || ($('#withdrawAmount').val().replace(/\s/g, "") === "")) {
+                                            $("#withdraw").hide();
+                                        } else {
+                                            $('#withdraw').show();
+                                            $('#withdraw-amount').hide();
+                                            $('#token-symbol').hide();
+                                        }
+                                    });
+
+                                    
+                                    })  
+                            </script>
+                        </div>
+                        
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+            <script>
+                $('#supportCreator').hide();
+                $('#withdrawContributions').hide();
+
+                $('#raise-button').click( () => {
+                    $('#createToken').show();
+                    $('#supportCreator').hide();
+                    $('#withdrawContributions').hide();
+                })
+                $('#support-button').click( () => {
+                    $('#createToken').hide();
+                    $('#withdrawContributions').hide();
+                    $('#supportCreator').show();
+                })
+                 $('#withdraw-button').click( () => {
+                    $('#createToken').hide();
+                    $('#supportCreator').hide();
+                    $('#withdrawContributions').show();
+                })
+            </script>
+        </div>
+    </body>
+</html>
