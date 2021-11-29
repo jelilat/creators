@@ -2,8 +2,9 @@ const Web3 = require('web3');
 const ethers = require('ethers');
 const Contract = require('web3-eth-contract');
 const env = require('../.env');
+require('dotenv').config();
 
-const infuraId = env.INFURA_ID
+const infuraId = process.env.INFURA_ID
 const web3 = new Web3(`https://polygon-mainnet.infura.io/v3/${infuraId}`)
 	
 
