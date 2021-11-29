@@ -186,19 +186,11 @@
                                         $(".fans").change(function() {
                                             if(($('#stokenSymbol').val().replace(/\s/g, "") === "") || ($('#supportAmount').val().replace(/\s/g, "") === "")) {
                                                 $("#support").hide();
-                                                console.log("empty")
                                             } else {
                                                 $("#support").show();
                                                 $('#c-symbol').hide();
                                                 $('#c-amount').hide();
                                             }
-                                        });
-
-                                        $('#support').click(async () => {
-                                            let symbol = $('#stokenSymbol').val();
-                                            let amount = $('#supportAmount').val();
-                                            let status = await supportToken(symbol, amount);
-                                            console.log(status)
                                         });
                                         
                                         }); 
@@ -313,6 +305,9 @@
 
                 $('#support').click(async () => {
                     let amount = $('#supportAmount').val();
+                    amount = amount * 10**18
+                    amount = amount.toString(16);
+                    console.log(amount)
                     let token = $('#stokenSymbol').val();
                     let hash = await contribute(amount, token);
                     let status = "https://polygonscan.com/tx/" + hash;
